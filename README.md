@@ -22,7 +22,7 @@ In conclusion,
 - and to demonstrate the MIP and compositing ray functions work as intended using the orange dataset.
 
 
-#### Applying the volume renderer to above implementation
+#### Applying the volume renderer to above implementation to Mouse Brain
 
 Use the above raycaster implementation and implement it on ```/MouseBrain/``` dataset which is the subset taken from the http://sciviscontest.ieeevis.org/2013/VisContest/index.html.
 
@@ -68,11 +68,64 @@ Trilinear interpolation is a method of multivariate interpolation on a 3-D regul
 
 ```Direct retrieval vs. Trilinear Interpolation. The orange data set has been kept side by side withthe respective orientation for said methods```
 
+##### Maximum Intensity Projection Ray Function
+
+Maximum intensity projection (MIP) is a method for 3D image rendering that projects in the visualisation plane, i.e., That pixel of the resulting image in the slicer renderer corresponds to a voxel located in a plane containing the volume data. To implement MIP, cast each ray in a direction that is normal to the plane, through each pixel of the image. The view vector defines the direction. The idea then is to measure the ray for each pixel, equally on both sides of the plane, using multiples of this vector and the maximum voxel value is captured. So, for a pixel p, the MIP function first computes the maximum scalar value along the ray r of p, and then maps this value via the chosen transfer function f to the color of pixel p. Using the parameterised ray notation, can be expressed in the MIP ray function as:
+
+
+![eqi1](https://latex.codecogs.com/gif.latex?I\left(&space;p\right)&space;=f\left(&space;\max&space;_{t\in&space;\left[&space;0,T\right]&space;}s\left(&space;t\right)&space;\right))
+
+![tri](/img/vlr.png)
+
+``` Volume rendering of the orange dataset using MIP as ray function from different angles```
+
+From above the figure it can be observed that the partial waxy skin (the peel) part of the orange with a dotted outer circle. The endocarp part of the Orange is visible with the precise segmentation of the juice sacs. Changing the orientation gives the 3D sides of the Orange. Although it fails to convey depth information, it can be see only what the maximum intensity along a ray is, but not at what position (depth) along the ray that value occurs.
 
 
 
+##### Compositing Ray Function
+
+Compositing ray function can be implemented in the same way as MIP, except that it do not take the maximum value from the ray samples. It maps each sample to an RGBA colour value first using a dedicated transfer function. Then calculate the output of pixels by applying the recursive equation to the ray sample array, starting from behind the volume (back to front).
+
+![eqi2](https://latex.codecogs.com/gif.latex?C_{i}=\tau&space;_{i}c_{i}&plus;\left(&space;1-\tau_{i}\right)&space;C_{i-1})
+
+Here, ![eqi3](https://latex.codecogs.com/gif.latex?c_i) refers to the current voxel colour (determined by the transfer function), ![eqi4](https://latex.codecogs.com/gif.latex?\tau_i) to the current opacity value and ![eqi5](https://latex.codecogs.com/gif.latex?c_i) to the current value of the output. For implementing above equation, each colour channel is considered separately using the sample colour of the voxel and transparency from the following relation:
+
+![eqi6](https://latex.codecogs.com/gif.latex?voxel\_color&space;=&space;voxel\_color&space;&plus;&space;sample\_color&space;*&space;sample\_color&space;*&space;comp\_transparancy)
+
+![crorange](/img/crorange.png)
+
+```olume rendering of the orange dataset using compositing a ray function with the provideddefault transfer function from different angles```
+
+Above figure shows the different angles of Orange for the default transfer function, compared to MIP the visibility inside the endocarp is lost but the texture is much more expressed, the exocarp and mesocarp is vaguely visible.
+
+
+#### Mouse Brain Implementation and Results
+
+##### Mouse Brain
+
+The data set tracks the level of gene expression for approx 2000 genes in a 3D mouse brain from embryonic stages through adulthood. These expression levels are recorded within annotated 3D regions that change size and shape (and even divide) during development. The following implementations were performed:
+
+- Implements MIP on volumes.
+- Renders multiple energy volumes.
+
+##### Rendering Multiple Volume
+
+The figures below are for every annotation, all the energies have been rendered. Every annotation has been visualised from three different angles. The implemented technique enables simultaneous visualisation of all the volumes at once. However, understanding of the resulting image must be vigilant, because colours can be harmonised, to avoid it the average colour is taken when two volumes overlap a voxel. This problem can be solved if only one or a few volumes of energy is the priority.
+
+![mousebrain](/img/mvmousebrain.png)
+
+```Volume rendering of the energy volumes of the mouse brain using compositing as ray function and the transfer function```
+
+Every energy file refers to a sample, which is the RNA sequence crossbred to a tissue specimen, but a probe typically only covers a subset of the entire gene sequence. As a consequence, as seen in below figure, there may be multiple probes, and therefore multiple volumes of energy, for a single gene at a specific annotation. Transthyretin gene in annotation 5 is one of the example from the given sample.
+
+![mousebrain](/img/testmvmousebrain.png)
+
+```Transthyretin gene in the mouse brain(100051791 - magenta, 100055110 - green, 100051792 - cyan```
 
 
 
+#### Conclusion
 
 
+The repo have utilised some rendering techniques for the given goal. While implementation it was realised that various strategies need to be chosen according to the problem at hand, and a lot of testing is needed, as well as an understanding of the data which is being used, is required. The biggest difficulties were the lack of computational resources which can be overcome by using a more resource-efficient programming language (mabe Java) or the efficient framework which is being used for this project.
