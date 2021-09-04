@@ -1,4 +1,4 @@
-# Volume Rendering
+# Volume Rendering using Ray Casting
 
 ## Goal
 
