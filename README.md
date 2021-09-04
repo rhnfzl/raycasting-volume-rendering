@@ -95,7 +95,7 @@ Here, ![eqi3](https://latex.codecogs.com/gif.latex?c_i) refers to the current vo
 
 ![crorange](/img/crorange.png)
 
-```olume rendering of the orange dataset using compositing a ray function with the provideddefault transfer function from different angles```
+```Volume rendering of the orange dataset using compositing a ray function with the provideddefault transfer function from different angles```
 
 Above figure shows the different angles of Orange for the default transfer function, compared to MIP the visibility inside the endocarp is lost but the texture is much more expressed, the exocarp and mesocarp is vaguely visible.
 
