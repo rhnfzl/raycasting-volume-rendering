@@ -56,5 +56,23 @@ Produce an insightful visualization of this data. The [paper](http://scivisconte
   4. Click OK and your project is ready to be run by clicking the Play button at the top-right corner
 
 
+### Implementation
+
+#### Ray Casting Implementation
+
+##### Trilinear Interpolation
+
+Trilinear interpolation is a method of multivariate interpolation on a 3-D regular grid. It approximates the value of a function at an intermediate point (x,y,z) within the local axial rectangular prism linearly, using function data on the lattice points. To find the projection of a voxel, take the trilinear interpolation. From below figure it can be observed that the Direct voxel rendering method has less structural details as compared to the Trilinear method of calculation under slicing, signal indeed gets smoothened as expected.
+
+![tri](/img/tri.png)
+
+```Direct retrieval vs. Trilinear Interpolation. The orange data set has been kept side by side withthe respective orientation for said methods```
+
+
+
+
+
+
+
 
 
